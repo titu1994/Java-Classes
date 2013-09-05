@@ -236,6 +236,11 @@ public class ExpressionEvaluation {
 				b = st.pop();
 				st.push(b%c);
 			}
+			else if(ch == '^'){
+				c = st.pop();
+				b = st.pop();
+				st.push((int)Math.pow(b, c));
+			}
 
 		}
 		
