@@ -2,12 +2,15 @@ package asignment6;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.EmptyStackException;
+import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.Stack;
 
 public class ExpressionEvaluation {
 
 	private String exp;
+	private static HashMap<Character, Integer> t;
+	private static BufferedReader bb = new BufferedReader(new InputStreamReader(System.in));
 	
 	public ExpressionEvaluation() {
 		// TODO Auto-generated constructor stub
@@ -21,8 +24,7 @@ public class ExpressionEvaluation {
 	
 	public static void main(String[] args) throws IOException {
 		// TODO Auto-generated method stub
-		
-		BufferedReader bb = new BufferedReader(new InputStreamReader(System.in));
+		t = new HashMap<Character, Integer>();
 		
 		System.out.println("Enter a string to evaluate");;
 		String s = bb.readLine();
@@ -35,7 +37,7 @@ public class ExpressionEvaluation {
 			System.out.println("Post fix is: "+p);
 			
 			double d = e.evaluatePostfix(p);
-			System.out.println("Outout is : "+d);
+			System.out.println("Output is : "+d);
 			
 		}
 		
@@ -117,28 +119,38 @@ public class ExpressionEvaluation {
 		
 		Stack<Character> st = new Stack<Character>();
 		
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 		char ch;
 
 		for(int i = 0; i < s.length(); i++){
 			ch = s.charAt(i);
 			
-			if(Character.isLetter(ch) || Character.isDigit(ch))
+			if(Character.isDigit(ch))
 				sb.append(ch);
+			
+			else if(Character.isLetter(ch)){
+				System.out.print("Enter a value for "+ch+" : ");
+				
+				try {
+					
+					t.put(ch, Integer.parseInt(bb.readLine()));
+					
+				} catch (Exception e) {
+					
+				} 
+				
+				sb.append(ch);
+			}
 			else{
 				if(st.isEmpty() || ch == '(' || precedence(ch) >= precedence(st.peek()) || ch == '^'){
 					st.push(ch);
 				}
 				else if(ch == ')'){
 					char chc;
-					try{
+					
 						while((chc = st.pop()) != '('){
-							if(ch != '(')
 								sb.append(chc);
 						}
-					}catch(EmptyStackException e){
-
-					}
 					
 				}
 				else{
@@ -191,8 +203,12 @@ public class ExpressionEvaluation {
 		for(int i = 0; i < s.length(); i++){
 			ch = s.charAt(i);
 
-			if(ch >= '0' && ch<= '9'){
+			if(Character.isDigit(ch)){
 				st.push(ch-48);
+			}
+			
+			else if(Character.isLetter(ch)){
+				st.push(t.get(ch));
 			}
 			
 			else if(ch == '*'){
