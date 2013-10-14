@@ -222,8 +222,8 @@ public class ExpressionEvaluation {
 				st.push(b+c);
 			}
 			else if(ch == '-'){
-				c = st.pop();
-				b = st.pop();
+					c = st.pop();
+					b = st.pop();
 				st.push(b-c);
 			}
 			else if(ch == '/'){
