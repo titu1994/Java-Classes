@@ -58,21 +58,41 @@ class Current extends Account implements Comparable<Account>{
 			
 			System.out.println("Service charge of "+SERVICE_CHARGE+" required due to balance being insufficient.");
 			
-			if(cust_balance < 0){
+			System.out.println("Balance is : "+cust_balance);
+		}
+	}
+	
+	public void checkbookWithdraw(double amt){
+		
+		if(balanceIsSufficient(amt)){
+			cust_balance -= amt;
+			System.out.println("Balance is : "+cust_balance);
+		}
+		else{
+			if(cust_balance < 0 && !isOverdrawen(cust_balance)){
 				System.out.println("Current Account over withdrawn. Limit of "+OVER_DRAWEN_LIMIT+" is allowed.");
+				cust_balance -= amt;
 				
 				if(isOverdrawen(cust_balance)){
 					System.out.println("Exceeded Over Drawen Limit");
 				}
 				
 			}
+			else{
+				System.out.println("Exceeded Over Drawen Limit");
+			}
 			
-			System.out.println("Balance is : "+cust_balance);
 		}
+		
 	}
 	
+	private boolean balanceIsSufficient(double amt) {
+		
+		return (cust_balance - amt) > 0;
+	}
+
 	private boolean isOverdrawen(double bal){
-		if(cust_balance >= OVER_DRAWEN_LIMIT)
+		if(bal >= OVER_DRAWEN_LIMIT)
 			return true;
 		else 
 			return false;
@@ -256,7 +276,7 @@ class BankManupulationClass {
 
 		HashMap<Integer, Account> t = new HashMap<Integer, Account>();
 
-		System.out.println("Give choice : \n1 -> Adding Customer \n2 -> Searching a Customer \n3 -> Displaying all Customers \n4 -> Removing a Customer \n5 -> Depositing Amount \n6 -> Withdrawing Amount\n7 -> Compute Interest \n8 -> Demand Loan\n 9 -> Payback Loan");
+		System.out.println("Give choice : \n1 -> Adding Customer \n2 -> Searching a Customer \n3 -> Displaying all Customers \n4 -> Removing a Customer \n5 -> Depositing Amount in Savings\n6 -> Withdraw Amount in Currents\n7 -> Withdraw from Savings\n8 -> Compute Interest \n9 -> Demand Loan\n10 -> Payback Loan");
 
 		do{
 			System.out.print("Enter a choice : ");
@@ -365,8 +385,35 @@ class BankManupulationClass {
 
 				break;
 			}
-
 			case 6:{
+
+				System.out.println("Enter the id : ");
+				int ID = Integer.parseInt(bb.readLine());
+
+				Account a = t.get(ID);
+
+				if(a != null){
+					try{
+						Current c = (Current) a;
+
+						if(c.isCurrentType){
+							System.out.println("Enter the ammount to withdraw : ");
+							double amt = Double.parseDouble(bb.readLine());
+							c.checkbookWithdraw(amt);
+						}
+						else{
+							System.out.println("Not a Current type account");
+						}
+					}catch(ClassCastException e){
+						System.out.println("Not a Current type account");
+					}
+				}
+
+
+				break;
+			}
+
+			case 7:{
 
 				System.out.println("Enter the id : ");
 				int ID = Integer.parseInt(bb.readLine());
@@ -399,7 +446,7 @@ class BankManupulationClass {
 				break;
 			}
 
-			case 7:{
+			case 8:{
 
 				System.out.println("Enter the id : ");
 				int ID = Integer.parseInt(bb.readLine());
@@ -428,7 +475,7 @@ class BankManupulationClass {
 
 				break;
 			}
-			case 8:{
+			case 9:{
 
 				System.out.println("Enter the id : ");
 				int ID = Integer.parseInt(bb.readLine());
@@ -460,7 +507,7 @@ class BankManupulationClass {
 
 				break;
 			}
-			case 9:{
+			case 10:{
 
 				System.out.println("Enter the id : ");
 				int ID = Integer.parseInt(bb.readLine());
